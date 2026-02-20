@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>WELCOME TO MY WEBSITE</title>
+    <style>
+        BODY {
+            BACKGROUND-COLOR: RGB(255,251,214);
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        H1 {
+            COLOR: GREEN;
+        }
+        LI {
+            COLOR: BLUE;
+        }
+
+        /* Login Page Styles */
+        .login-body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: url('https://images.pexels.com/photos/268533/pexels-photo-268533.jpeg?auto=compress&cs=tinysrgb&w=1920') no-repeat center center/cover;
+            position: relative;
+            margin: 0;
+            padding: 0;
+        }
+
+        .login-body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.3) 100%);
+            backdrop-filter: blur(3px);
+        }
+
+        .login-container {
+            position: relative;
+            z-index: 10;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 50px 40px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.2);
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .login-header h1 {
+            color: #fff;
+            font-size: 32px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .login-header p {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 15px 20px;
+            padding-right: 50px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            font-size: 16px;
+            color: #fff;
+            outline: none;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        .form-group input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .form-group input:focus {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.5);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+        }
+
+        /* Password visibility toggle */
+        .password-toggle {
+            position: absolute;
+            right: 15px;
+            top: 42px;
+            color: rgba(255, 255, 255, 0.7);
+            cursor: pointer;
+            font-size: 18px;
+            transition: color 0.3s ease;
+        }
+
+        .password-toggle:hover {
+            color: #fff;
+        }
+
+        .remember-forgot {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .remember-forgot label {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .remember-forgot input[type="checkbox"] {
+            margin-right: 8px;
+            accent-color: #4CAF50;
+        }
+
+        .remember-forgot a {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .remember-forgot a:hover {
+            color: #fff;
+            text-decoration: underline;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            border: none;
+            border-radius: 10px;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+        }
+
+        .login-btn:hover {
+            background: linear-gradient(135deg, #45a049 0%, #3d8b40 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(76, 175, 80, 0.4);
+        }
+
+        .login-btn:active {
+            transform: translateY(0);
+        }
+
+        .login-btn:disabled {
+            background: #888;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Loading spinner */
+        .spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top: 3px solid #fff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .login-btn.loading .spinner {
+            display: block;
+        }
+
+        .login-btn.loading .btn-text {
+            display: none;
+        }
+
+        /* Error message */
+        .error-message {
+            display: none;
+            background: rgba(255, 0, 0, 0.2);
+            border: 1px solid rgba(255, 0, 0, 0.5);
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 20px;
+            color: #ff6b6b;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .error-message.show {
+            display: block;
+            animation: shake 0.5s ease;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        /* Success message */
+        .success-message {
+            display: none;
+            background: rgba(76, 175, 80, 0.2);
+            border: 1px solid rgba(76, 175, 80, 0.5);
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 20px;
+            color: #4CAF50;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        .signup-link {
+            text-align: center;
+            margin-top: 25px;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+        }
+
+        .signup-link a {
+            color: #4CAF50;
+            font-weight: 600;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .signup-link a:hover {
+            color: #fff;
+            text-decoration: underline;
+        }
+
+        .login-container::after {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            border-radius: 22px;
+            background: linear-gradient(45deg, rgba(76, 175, 80, 0.5), transparent, rgba(255, 255, 255, 0.5), transparent, rgba(76, 175, 80, 0.5));
+            background-size: 400% 400%;
+            animation: gradientBorder 3s ease infinite;
+            z-index: -1;
+            opacity: 0.5;
+        }
+
+        @keyframes gradientBorder {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @media (max-width: 480px) {
+            .login-container {
+                margin: 20px;
+                padding: 40px 25px;
+            }
+
+            .login-header h1 {
+                font-size: 26px;
+            }
+        }
+
+        /* Tab navigation */
+        .nav-tabs {
+            display: flex;
+            justify-content: center;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            padding: 15px;
+            position: relative;
+        }
+
+        .nav-tabs button {
+            padding: 12px 30px;
+            margin: 0 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 25px;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .nav-tabs button:hover,
+        .nav-tabs button.active {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            border-color: #4CAF50;
+        }
+
+        .logout-btn {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            padding: 8px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            color: #fff;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255, 0, 0, 0.3);
+            border-color: rgba(255, 0, 0, 0.5);
+        }
+
+        .user-info {
+            display: none;
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+        }
+
+        .user-info.show {
+            display: block;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Original content styles */
+        .original-content {
+            padding: 30px;
+        }
+
+        .original-content h1 {
+            COLOR: GREEN;
+            font-size: 36px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .original-content LI {
+            COLOR: BLUE;
+            line-height: 1.8;
+        }
+
+        /* Welcome banner */
+        .welcome-banner {
+            display: none;
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            padding: 15px 30px;
+            color: white;
+            text-align: center;
+            font-size: 18px;
+            border-radius: 0 0 20px 20px;
+            margin: -15px -30px 30px -30px;
+        }
+
+        .welcome-banner.show {
+            display: block;
+        }
+    </style>
+</head>
+
+<!-- Tab Navigation -->
+<div class="nav-tabs">
+    <button class="active" id="loginTabBtn" onclick="showTab('login')">Login</button>
+    <button id="homeTabBtn" onclick="showTab('content')" style="display: none;">Home</button>
+    <div class="user-info" id="userInfo">Welcome, <span id="userName"></span>!</div>
+    <button class="logout-btn" id="logoutBtn" onclick="logout()" style="display: none;">Logout</button>
+</div>
+
+<!-- Login Tab -->
+<div id="login" class="tab-content active login-body">
+    <div class="login-container">
+        <div class="login-header">
+            <h1>Welcome Back</h1>
+            <p>Please enter your details to sign in</p>
+        </div>
+
+        <!-- Error Message -->
+        <div class="error-message" id="errorMessage"></div>
+
+        <!-- Success Message -->
+        <div class="success-message" id="successMessage"></div>
+
+        <form action="#" method="POST" onsubmit="handleLogin(event)">
+            <!-- Username Field -->
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" placeholder="Enter your username" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" placeholder="Enter your email" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                <span class="password-toggle" onclick="togglePassword()">👁️</span>
+            </div>
+
+            <div class="remember-forgot">
+                <label>
+                    <input type="checkbox" name="remember"> Remember me
+                </label>
+                <a href="#">Forgot password?</a>
+            </div>
+
+            <button type="submit" class="login-btn" id="loginBtn">
+                <span class="btn-text">Sign In</span>
+                <div class="spinner"></div>
+            </button>
+        </form>
+
+        <div class="signup-link">
+            Don't have an account? <a href="#">Sign up</a>
+        </div>
+    </div>
+</div>
+
+<!-- Original Content Tab -->
+<div id="content" class="tab-content original-content">
+    <div class="welcome-banner" id="welcomeBanner">
+        🎉 Login successful! Welcome to our website!
+    </div>
+    <BODY BACKGROUND="C:\Users\hp\Downloads\pexels-tima-miroshnichenko-5380664.jpg">
+        <H1> CYBER SECURIETY</H1>
+        <UL STYLE=LIST-STYLE-POSITION:OUTSIDE>
+            <LI>Here's a well-developed topic you can use on Cybersecurity:
+
+            🌐 Cybersecurity in the Age of Artificial Intelligence
+            Introduction
+            Cybersecurity has become one of the most critical challenges of the digital era. With the rapid adoption of artificial intelligence (AI) and machine learning ( and attackers are leveraging advanced technologies to gainML), both defenders an edge. This dual use of AI creates new opportunities for protection but also introduces unprecedented risks.
+            Key Points
+            • AI-Powered Threat Detection
+            Machine learning algorithms can analyze massive datasets to detect anomalies, identify malware, and predict potential breaches faster than traditional methods.
+            • AI-Driven Cyber Attacks
+            Hackers are now using AI to automate phishing campaigns, create deepfake content, and bypass security systems, making attacks more sophisticated and harder to detect.
+            • Zero-Trust Architecture
+            Organizations are increasingly adopting zero-trust models, where no user or device is automatically trusted, reducing the risk of insider threats and compromised credentials.
+            • Quantum-Resistant Cryptography
+            With quantum computing on the horizon, current encryption methods may become obsolete. Research into quantum-resistant algorithms is vital to secure future communications.
+            • Human-Centric Risks
+            Despite technological advances, social engineering remains one of the biggest vulnerabilities. AI-generated phishing emails and voice scams exploit human psychology more effectively than ever.
+            Challenges
+            • Balancing innovation with regulation.
+            • Addressing the shortage of skilled cybersecurity professionals.
+            • Ensuring ethical use of AI in defense and offense.
+            Conclusion
+            Cybersecurity in the age of AI is a double-edged sword. While AI strengthens defenses, it also empowers attackers. The future of cybersecurity will depend on proactive research, global cooperation, and continuous innovation to stay ahead of evolving 
+        </UL>
+    </BODY>
+</div>
+
+<script>
+    // Simulated user database
+    const users = [
+        { username: 'admin', email: 'admin@example.com', password: 'admin123' },
+        { username: 'john', email: 'john@example.com', password: 'john123' },
+        { username: 'jane', email: 'jane@example.com', password: 'jane123' },
+        { username: 'user', email: 'user@example.com', password: 'user123' }
+    ];
+
+    let isLoggedIn = false;
+    let currentUser = null;
+
+    function showTab(tabName) {
+        // Hide all tab contents
+        var contents = document.getElementsByClassName('tab-content');
+        for (var i = 0; i < contents.length; i++) {
+            contents[i].classList.remove('active');
+        }
+
+        // Remove active class from all buttons
+        var buttons = document.getElementsByClassName('nav-tabs')[0].getElementsByTagName('button');
+        for (var i = 0; i < buttons.length; i++) {
+            if (buttons[i].classList.contains('logout-btn')) continue;
+            buttons[i].classList.remove('active');
+        }
+
+        // Show the selected tab and activate the button
+        document.getElementById(tabName).classList.add('active');
+        
+        // Find and activate the correct button
+        var buttons = document.getElementsByClassName('nav-tabs')[0].getElementsByTagName('button');
+        if (tabName === 'login') {
+            buttons[0].classList.add('active');
+        } else if (tabName === 'content') {
+            buttons[1].classList.add('active');
+        }
+    }
+
+    // Toggle password visibility
+    function togglePassword() {
+        var passwordInput = document.getElementById('password');
+        var toggleBtn = document.querySelector('.password-toggle');
+        
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            toggleBtn.textContent = '🙈';
+        } else {
+            passwordInput.type = 'password';
+            toggleBtn.textContent = '👁️';
+        }
+    }
+
+    // Show error message
+    function showError(message) {
+        var errorDiv = document.getElementById('errorMessage');
+        errorDiv.textContent = message;
+        errorDiv.classList.add('show');
+        
+        // Hide after 3 seconds
+        setTimeout(function() {
+            errorDiv.classList.remove('show');
+        }, 3000);
+    }
+
+    // Show success message
+    function showSuccess(message) {
+        var successDiv = document.getElementById('successMessage');
+        successDiv.textContent = message;
+        successDiv.classList.add('show');
+        
+        // Hide after 3 seconds
+        setTimeout(function() {
+            successDiv.classList.remove('show');
+        }, 3000);
+    }
+
+    // Handle login form submission
+    function handleLogin(event) {
+        event.preventDefault(); // Prevent actual form submission
+        
+        var username = document.getElementById('username').value;
+        var email = document.getElementById('email').value;
+        var password = document.getElementById('password').value;
+        var loginBtn = document.getElementById('loginBtn');
+        
+        // Hide any previous messages
+        document.getElementById('errorMessage').classList.remove('show');
+        document.getElementById('successMessage').classList.remove('show');
+        
+        // Show loading animation
+        loginBtn.classList.add('loading');
+        loginBtn.disabled = true;
+        
+        // Simulate network delay
+        setTimeout(function() {
+            // Check if user exists in database
+            var user = users.find(function(u) {
+                return (u.username === username || u.email === email) && u.password === password;
+            });
+            
+            if (user) {
+                // Login successful
+                isLoggedIn = true;
+                currentUser = user;
+                
+                // Show success message
+                showSuccess('✓ Login successful! Redirecting...');
+                
+                // Update UI
+                setTimeout(function() {
+                    // Show logout button, user info, and Home button
+                    document.getElementById('logoutBtn').style.display = 'block';
+                    document.getElementById('userInfo').classList.add('show');
+                    document.getElementById('homeTabBtn').style.display = 'block';
+                    document.getElementById('userName').textContent = user.username;
+                    document.getElementById('welcomeBanner').classList.add('show');
+                    
+                    // Clear form
+                    document.getElementById('username').value = '';
+                    document.getElementById('email').value = '';
+                    document.getElementById('password').value = '';
+                    
+                    // Switch to Home tab
+                    showTab('content');
+                    
+                    // Hide loading
+                    loginBtn.classList.remove('loading');
+                    loginBtn.disabled = false;
+                }, 1000);
+            } else {
+                // Login failed
+                showError('✗ Invalid username/email or password. Please try again.');
+                
+                // Hide loading
+                loginBtn.classList.remove('loading');
+                loginBtn.disabled = false;
+            }
+        }, 1500); // 1.5 second delay to show loading animation
+    }
+
+    // Logout function
+    function logout() {
+        if (confirm('Are you sure you want to logout?')) {
+            isLoggedIn = false;
+            currentUser = null;
+            
+            // Hide logout button and user info
+            document.getElementById('logoutBtn').style.display = 'none';
+            document.getElementById('userInfo').classList.remove('show');
+            document.getElementById('welcomeBanner').classList.remove('show');
+            
+            // Clear stored user
+            document.getElementById('userName').textContent = '';
+            
+            // Show success message
+            showSuccess('✓ You have been logged out successfully!');
+            
+            // Switch to Login tab
+            setTimeout(function() {
+                showTab('login');
+            }, 500);
+        }
+    }
+
+    // Check for enter key press
+    document.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            var activeElement = document.activeElement;
+            if (activeElement.tagName === 'INPUT') {
+                handleLogin(e);
+            }
+        }
+    });
+</script>
+
+</HTML>
